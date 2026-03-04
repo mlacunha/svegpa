@@ -1,0 +1,2 @@
+-- Nota: Tabelas parte_coletada e materiais_coleta_amostra foram excluídas.
+-- area_inspecionada agora usa: coletar_mostra e colunas boolean raiz, caule, peciolo, folha, flor, fruto, semente.

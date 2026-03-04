@@ -1,0 +1,182 @@
+/* Estilos personalizados */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.btn-primary {
+    background-color: #1e40af;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+    background-color: #64748b;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #475569;
+}
+
+.btn-danger {
+    background-color: #dc2626;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Formulário compacto (propriedades) */
+.prop-form-compact .form-group {
+    margin-bottom: 0.5rem;
+}
+.prop-form-compact .space-y-3 > * + * {
+    margin-top: 0.75rem;
+}
+.prop-form-compact h3 {
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.form-group input:not([type="checkbox"]),
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:not([type="checkbox"]):focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #1e40af;
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+/* Linha horizontal compacta - campos dentro do container */
+.form-row-horizontal {
+    min-width: 0;
+    width: 100%;
+}
+.form-row-horizontal .form-group {
+    min-width: 0;
+}
+.form-row-horizontal .form-group input,
+.form-row-horizontal .form-group select {
+    min-width: 0;
+}
+
+/* Checkbox com rótulo à direita (checkbox primeiro) */
+.form-group-checkbox label {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0;
+}
+.form-group-checkbox input[type="checkbox"] {
+    order: 1;
+    width: auto;
+}
+.form-group-checkbox label span {
+    order: 2;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.alert-success {
+    background-color: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.alert-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.alert-info {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #93c5fd;
+}
+
+/* Sidebar colapsável */
+details.sidebar-group summary::-webkit-details-marker,
+details.sidebar-subgroup summary::-webkit-details-marker {
+    display: none;
+}
+details[open] .sidebar-chevron {
+    transform: rotate(180deg);
+}

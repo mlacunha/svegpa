@@ -1,0 +1,231 @@
+{
+  "info": {
+    "name": "Sanveg API",
+    "description": "Collection da API REST do Sistema de Vigilância Epidemiológica (SVEG)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost/sanveg"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"teste5\",\n  \"password\": \"sua_senha\"\n}"
+            },
+            "url": "{{base_url}}/api/auth/login",
+            "description": "Retorna token JWT. Copie o token e cole em {{token}} ou no ambiente.",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "const r = pm.response.json();",
+                    "if (r.token) {",
+                    "  pm.environment.set('token', r.token);",
+                    "  console.log('Token salvo no ambiente');",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Health",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": "{{base_url}}/api/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Programas",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/programas?limit=50&offset=0"
+          }
+        },
+        {
+          "name": "Buscar",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/programas/68171b8fe81ca6.43972370"
+          }
+        },
+        {
+          "name": "Criar",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"TEST\",\n  \"nome\": \"Programa Teste\",\n  \"nomes_comuns\": \"Teste\",\n  \"nome_cientifico\": \"Test spp\"\n}"
+            },
+            "url": "{{base_url}}/api/programas"
+          }
+        },
+        {
+          "name": "Atualizar",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Programa Atualizado\"\n}"
+            },
+            "url": "{{base_url}}/api/programas/:id"
+          }
+        },
+        {
+          "name": "Excluir",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/programas/:id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Propriedades",
+      "item": [
+        {"name": "Listar", "request": {"method": "GET", "url": "{{base_url}}/api/propriedades?limit=50&offset=0"}},
+        {"name": "Buscar", "request": {"method": "GET", "url": "{{base_url}}/api/propriedades/:id"}},
+        {"name": "Criar", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"nome\": \"Propriedade Teste\", \"municipio\": \"Belém\", \"UF\": \"PA\"}"}, "url": "{{base_url}}/api/propriedades"}},
+        {"name": "Atualizar", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{base_url}}/api/propriedades/:id"}},
+        {"name": "Excluir", "request": {"method": "DELETE", "url": "{{base_url}}/api/propriedades/:id"}}
+      ]
+    },
+    {
+      "name": "Produtores",
+      "item": [
+        {"name": "Listar", "request": {"method": "GET", "url": "{{base_url}}/api/produtores?limit=50&offset=0"}},
+        {"name": "Buscar", "request": {"method": "GET", "url": "{{base_url}}/api/produtores/:id"}},
+        {"name": "Criar", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"nome\": \"Produtor Teste\", \"municipio\": \"Belém\", \"uf\": \"PA\"}"}, "url": "{{base_url}}/api/produtores"}},
+        {"name": "Atualizar", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{base_url}}/api/produtores/:id"}},
+        {"name": "Excluir", "request": {"method": "DELETE", "url": "{{base_url}}/api/produtores/:id"}}
+      ]
+    },
+    {
+      "name": "Relatório Mapa",
+      "item": [
+        {"name": "Listar", "request": {"method": "GET", "url": "{{base_url}}/api/relatorio_mapa?limit=50&offset=0"}},
+        {"name": "Buscar", "request": {"method": "GET", "url": "{{base_url}}/api/relatorio_mapa/1"}},
+        {
+          "name": "Criar",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_programa\": \"682220c5e1aa09.70598592\",\n  \"ano\": \"2025\",\n  \"data\": \"2025-02-15\",\n  \"trimestre\": 1,\n  \"municipio\": \"Belém\",\n  \"cultura\": \"Laranja\",\n  \"latitude\": -1.455456,\n  \"longitude\": -48.677678,\n  \"status\": \"NORMAL\"\n}"
+            },
+            "url": "{{base_url}}/api/relatorio_mapa"
+          }
+        },
+        {"name": "Atualizar", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"status\": \"SUSPEITA\"}"}, "url": "{{base_url}}/api/relatorio_mapa/:id"}},
+        {"name": "Excluir", "request": {"method": "DELETE", "url": "{{base_url}}/api/relatorio_mapa/:id"}}
+      ]
+    },
+    {
+      "name": "Área Inspecionada",
+      "item": [
+        {"name": "Listar", "request": {"method": "GET", "url": "{{base_url}}/api/area-inspecionada"}},
+        {"name": "Listar por termo", "request": {"method": "GET", "url": "{{base_url}}/api/area-inspecionada/:id_ti"}},
+        {
+          "name": "Criar",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_termo_inspecao\": \"049e6871e7e24512b1\",\n  \"id_programa\": \"68171b8fe81ca6.43972370\",\n  \"numero_plantas\": 100,\n  \"numero_inspecionadas\": 50,\n  \"obs\": \"\"\n}"
+            },
+            "url": "{{base_url}}/api/area-inspecionada"
+          }
+        },
+        {"name": "Atualizar", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{base_url}}/api/area-inspecionada/:id_ti/:id"}},
+        {"name": "Excluir", "request": {"method": "DELETE", "url": "{{base_url}}/api/area-inspecionada/:id_ti/:id"}}
+      ]
+    },
+    {
+      "name": "Amostra Coletada",
+      "item": [
+        {"name": "Listar", "request": {"method": "GET", "url": "{{base_url}}/api/amostra-coletada"}},
+        {"name": "Listar por termo", "request": {"method": "GET", "url": "{{base_url}}/api/amostra-coletada/:id_ti"}},
+        {
+          "name": "Criar",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_termo_inspecao\": \"049e6871e7e24512b1\",\n  \"identificacao_coleta\": \"CB001\",\n  \"parte_coletada\": \"Folha\",\n  \"latitude\": -1.455456,\n  \"longitude\": -48.677678\n}"
+            },
+            "url": "{{base_url}}/api/amostra-coletada"
+          }
+        },
+        {"name": "Atualizar", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": "{{base_url}}/api/amostra-coletada/:id_ti/:id"}},
+        {"name": "Excluir", "request": {"method": "DELETE", "url": "{{base_url}}/api/amostra-coletada/:id_ti/:id"}}
+      ]
+    },
+    {
+      "name": "Outros recursos (CRUD)",
+      "item": [
+        {"name": "Produtos - Listar", "request": {"method": "GET", "url": "{{base_url}}/api/produtos?limit=50"}},
+        {"name": "Hospedeiros - Listar", "request": {"method": "GET", "url": "{{base_url}}/api/hospedeiros?limit=50"}},
+        {"name": "Órgãos - Listar", "request": {"method": "GET", "url": "{{base_url}}/api/orgaos?limit=50"}},
+        {"name": "Tipos Órgão - Listar", "request": {"method": "GET", "url": "{{base_url}}/api/orgaos_tipos?limit=50"}},
+        {"name": "Cargos - Listar", "request": {"method": "GET", "url": "{{base_url}}/api/cargos?limit=50"}},
+        {"name": "Estados - Listar", "request": {"method": "GET", "url": "{{base_url}}/api/estados?limit=50"}},
+        {"name": "Municípios - Listar", "request": {"method": "GET", "url": "{{base_url}}/api/municipios?limit=50&offset=0"}},
+        {"name": "Normas - Listar", "request": {"method": "GET", "url": "{{base_url}}/api/normas?limit=50"}},
+        {"name": "Unidades - Listar", "request": {"method": "GET", "url": "{{base_url}}/api/unidades?limit=50"}},
+        {"name": "Termo Inspeção - Listar", "request": {"method": "GET", "url": "{{base_url}}/api/termo_inspecao?limit=50"}},
+        {"name": "Reg Atividade - Listar", "request": {"method": "GET", "url": "{{base_url}}/api/reg-atividade?limit=50"}},
+        {"name": "Reg Metas - Listar", "request": {"method": "GET", "url": "{{base_url}}/api/reg-metas?limit=50"}},
+        {"name": "Dashboard Filtros - Listar", "request": {"method": "GET", "url": "{{base_url}}/api/dashboard_filtros?limit=50"}}
+      ]
+    }
+  ]
+}

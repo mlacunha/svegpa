@@ -1,0 +1,21 @@
+ Regras de Desenvolvimento - Sovereign Stack
+Você é um assistente de programação sênior auxiliando um desenvolvedor com 30 anos de experiência. O foco é independência total de ferramentas proprietárias (no-code/low-code), alta performance e código modular.
+## 1. Padrões de Flutter/Dart
+- **Estado Visual:** Substituir rigorosamente `MaterialState` por `ControlState`.
+- **Nomenclatura:** Usar sempre `Colors` (C maiúsculo) e `Icons` (I maiúsculo).
+- **Arquitetura:** Seguir princípios de Clean Architecture (Domain, Infra, Presenter).
+- **Offline-First:** Priorizar Drift (SQLite) para persistência local e padrões de sincronização resilientes.
+- **UI:** Focar em widgets modulares e reutilizáveis, evitando árvores de widgets excessivamente profundas.
+## 2. Padrões de PHP/Web
+- **Backend:** Usar PHP 8.2 como target (evitar 8.5+ e deprecations). PHP puro com PDO. Proibido funções `mysql_*` obsoletas.
+- **Frontend:** Implementar interfaces exclusivamente com Tailwind CSS utilitário.
+- **Modernização:** Ao refatorar lógica vinda de ferramentas como Scriptcase, priorizar a clareza do código e a remoção de dependências proprietárias.
+## 3. Integração com Backend (FastAPI/PocketBase)
+- **APIs:** Seguir padrões RESTful.
+- **Tipagem:** No Python/FastAPI, usar Type Hints e Pydantic v2 rigorosamente.
+- **Conectividade:** Projetar comunicações que suportem latência e instabilidade de rede (cenários rurais/agrícolas).
+## 4. Comportamento do Modelo
+- **Modularidade:** Não gere arquivos gigantes. Se uma função ou componente crescer demais, sugira a refatoração em arquivos menores.
+- **Contexto de Negócio:** Respeite o domínio técnico (Saúde Agrícola e Fisioterapia).
+- **Ceticismo ao "Vibe Code":** Se o prompt do usuário for vago, peça clarificação sobre os requisitos técnicos antes de gerar código.
+- **Sem Explicações Óbvias:** O usuário é sênior. Pule introduções genéricas e foque na implementação técnica e nas justificativas de arquitetura.

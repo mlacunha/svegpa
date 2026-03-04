@@ -1,0 +1,1162 @@
+openapi: 3.0.3
+info:
+  title: API Sanveg
+  description: |
+    API REST do Sistema de Vigilância Epidemiológica (SVEG).
+    Endpoints para cadastros, levantamentos e coleta de dados fitossanitários.
+
+    **Recursos CRUD** (mesmo padrão de programas): propriedades, produtores, produtos,
+    hospedeiros, orgaos, orgaos_tipos, cargos, estados, municipios, normas, unidades,
+    termo_inspecao, dashboard_filtros, reg_atividade, reg_metas.
+  version: 1.0.0
+  contact:
+    name: SVEG
+
+servers:
+  - url: http://localhost/Projetos/sanveg
+    description: Servidor local
+  - url: https://seu-dominio.com
+    description: Produção (ajuste conforme deploy)
+
+tags:
+  - name: Auth
+    description: Autenticação
+  - name: Health
+    description: Status do servidor
+  - name: Programas
+  - name: Propriedades
+  - name: Produtores
+  - name: Produtos
+  - name: Hospedeiros
+  - name: Órgãos
+  - name: Tipos de Órgão
+  - name: Cargos
+  - name: Estados
+  - name: Municípios
+  - name: Normas
+  - name: Unidades
+  - name: Termo Inspeção
+  - name: Relatório Mapa
+  - name: Área Inspecionada
+  - name: Amostra Coletada
+  - name: Reg Atividade
+  - name: Reg Metas
+  - name: Dashboard Filtros
+
+paths:
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login
+      description: Autentica usuário e retorna token JWT
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [login, password]
+              properties:
+                login:
+                  type: string
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Login realizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      login:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+        '401':
+          description: Credenciais inválidas
+
+  /api/health:
+    get:
+      tags: [Health]
+      summary: Health check
+      description: Verifica se a API está online
+      security: []
+      responses:
+        '200':
+          description: API online
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /api/programas:
+    get:
+      tags: [Programas]
+      summary: Listar programas
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Lista de programas
+    post:
+      tags: [Programas]
+      summary: Criar programa
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProgramaInput'
+      responses:
+        '201':
+          description: Criado
+        '400':
+          description: Dados inválidos
+
+  /api/programas/{id}:
+    get:
+      tags: [Programas]
+      summary: Buscar programa
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Programa encontrado
+        '404':
+          description: Não encontrado
+    put:
+      tags: [Programas]
+      summary: Atualizar programa
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProgramaInput'
+      responses:
+        '200':
+          description: Atualizado
+        '404':
+          description: Não encontrado
+    delete:
+      tags: [Programas]
+      summary: Excluir programa
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+        '404':
+          description: Não encontrado
+
+  /api/propriedades:
+    get:
+      tags: [Propriedades]
+      summary: Listar propriedades
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Lista de propriedades
+    post:
+      tags: [Propriedades]
+      summary: Criar propriedade
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome: { type: string }
+                municipio: { type: string }
+                UF: { type: string }
+      responses:
+        '201':
+          description: Criado
+  /api/propriedades/{id}:
+    get:
+      tags: [Propriedades]
+      summary: Buscar propriedade
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Propriedade encontrada
+    put:
+      tags: [Propriedades]
+      summary: Atualizar propriedade
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Propriedades]
+      summary: Excluir propriedade
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+
+  /api/produtores:
+    get:
+      tags: [Produtores]
+      summary: Listar produtores
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Lista de produtores
+    post:
+      tags: [Produtores]
+      summary: Criar produtor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome: { type: string }
+                municipio: { type: string }
+                uf: { type: string }
+      responses:
+        '201':
+          description: Criado
+  /api/produtores/{id}:
+    get:
+      tags: [Produtores]
+      summary: Buscar produtor
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Produtor encontrado
+    put:
+      tags: [Produtores]
+      summary: Atualizar produtor
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Produtores]
+      summary: Excluir produtor
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+
+  /api/produtos:
+    get:
+      tags: [Produtos]
+      summary: Listar produtos
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Lista de produtos
+    post:
+      tags: [Produtos]
+      summary: Criar produto
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_propriedade: { type: string }
+                produto: { type: string }
+      responses:
+        '201':
+          description: Criado
+  /api/produtos/{id}:
+    get:
+      tags: [Produtos]
+      summary: Buscar produto
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Produto encontrado
+    put:
+      tags: [Produtos]
+      summary: Atualizar produto
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Produtos]
+      summary: Excluir produto
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+
+  /api/hospedeiros:
+    get:
+      tags: [Hospedeiros]
+      summary: Listar hospedeiros
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Lista de hospedeiros
+    post:
+      tags: [Hospedeiros]
+      summary: Criar hospedeiro
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_programa: { type: string }
+                nomes_comuns: { type: string }
+                nome_cientifico: { type: string }
+      responses:
+        '201':
+          description: Criado
+  /api/hospedeiros/{id}:
+    get:
+      tags: [Hospedeiros]
+      summary: Buscar hospedeiro
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Hospedeiro encontrado
+    put:
+      tags: [Hospedeiros]
+      summary: Atualizar hospedeiro
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Hospedeiros]
+      summary: Excluir hospedeiro
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+
+  /api/orgaos:
+    get:
+      tags: [Órgãos]
+      summary: Listar órgãos
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Lista de órgãos
+    post:
+      tags: [Órgãos]
+      summary: Criar órgão
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sigla: { type: string }
+                nome: { type: string }
+                tipo: { type: string }
+                UF_sede: { type: string }
+      responses:
+        '201':
+          description: Criado
+  /api/orgaos/{id}:
+    get:
+      tags: [Órgãos]
+      summary: Buscar órgão
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Órgão encontrado
+    put:
+      tags: [Órgãos]
+      summary: Atualizar órgão
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Órgãos]
+      summary: Excluir órgão
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+
+  /api/orgaos_tipos:
+    get:
+      tags: [Tipos de Órgão]
+      summary: Listar tipos de órgão
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Lista
+    post:
+      tags: [Tipos de Órgão]
+      summary: Criar tipo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tipo: { type: string }
+      responses:
+        '201':
+          description: Criado
+  /api/orgaos_tipos/{id}:
+    get:
+      tags: [Tipos de Órgão]
+      summary: Buscar tipo
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Encontrado
+    put:
+      tags: [Tipos de Órgão]
+      summary: Atualizar tipo
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Tipos de Órgão]
+      summary: Excluir tipo
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+
+  /api/cargos:
+    get:
+      tags: [Cargos]
+      summary: Listar cargos
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Lista de cargos
+    post:
+      tags: [Cargos]
+      summary: Criar cargo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orgao: { type: string }
+                sigla: { type: string }
+                nome: { type: string }
+      responses:
+        '201':
+          description: Criado
+  /api/cargos/{id}:
+    get:
+      tags: [Cargos]
+      summary: Buscar cargo
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Cargo encontrado
+    put:
+      tags: [Cargos]
+      summary: Atualizar cargo
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Cargos]
+      summary: Excluir cargo
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+
+  /api/estados:
+    get:
+      tags: [Estados]
+      summary: Listar estados
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Lista de estados
+    post:
+      tags: [Estados]
+      summary: Criar estado
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome: { type: string }
+                sigla: { type: string }
+                regiao: { type: string }
+      responses:
+        '201':
+          description: Criado
+  /api/estados/{id}:
+    get:
+      tags: [Estados]
+      summary: Buscar estado
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Estado encontrado
+    put:
+      tags: [Estados]
+      summary: Atualizar estado
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Estados]
+      summary: Excluir estado
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+
+  /api/municipios:
+    get:
+      tags: [Municípios]
+      summary: Listar municípios
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Lista de municípios
+    post:
+      tags: [Municípios]
+      summary: Criar município
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome: { type: string }
+                estado_id: { type: integer }
+      responses:
+        '201':
+          description: Criado
+  /api/municipios/{id}:
+    get:
+      tags: [Municípios]
+      summary: Buscar município
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Município encontrado
+    put:
+      tags: [Municípios]
+      summary: Atualizar município
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Municípios]
+      summary: Excluir município
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+
+  /api/normas:
+    get:
+      tags: [Normas]
+      summary: Listar normas
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Lista de normas
+    post:
+      tags: [Normas]
+      summary: Criar norma
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_programa: { type: string }
+                nome_norma: { type: string }
+                ementa: { type: string }
+      responses:
+        '201':
+          description: Criado
+  /api/normas/{id}:
+    get:
+      tags: [Normas]
+      summary: Buscar norma
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Norma encontrada
+    put:
+      tags: [Normas]
+      summary: Atualizar norma
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Normas]
+      summary: Excluir norma
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+
+  /api/unidades:
+    get:
+      tags: [Unidades]
+      summary: Listar unidades
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Lista de unidades
+    post:
+      tags: [Unidades]
+      summary: Criar unidade
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orgao: { type: string }
+                nome: { type: string }
+                municipio: { type: string }
+                uf: { type: string }
+      responses:
+        '201':
+          description: Criado
+  /api/unidades/{id}:
+    get:
+      tags: [Unidades]
+      summary: Buscar unidade
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Unidade encontrada
+    put:
+      tags: [Unidades]
+      summary: Atualizar unidade
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Unidades]
+      summary: Excluir unidade
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+
+  /api/termo_inspecao:
+    get:
+      tags: [Termo Inspeção]
+      summary: Listar termos de inspeção
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+      responses:
+        '200':
+          description: Lista de termos
+    post:
+      tags: [Termo Inspeção]
+      summary: Criar termo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data_inspecao: { type: string, format: date, description: Data da inspeção }
+                data_amostragem: { type: string, format: date, description: Data da amostragem (opcional) }
+                id_propriedade: { type: string }
+                id_usuario: { type: string, description: Login do técnico responsável }
+                id_auxiliar: { type: string, description: Login do auxiliar (opcional) }
+                termo_inspecao: { type: string, description: Gerado automaticamente - Sequencial/Matrícula/Ano }
+                termo_coleta: { type: string, description: Gerado automaticamente - Sequencial/Matrícula/Ano }
+      responses:
+        '201':
+          description: Criado
+  /api/termo_inspecao/{id}:
+    get:
+      tags: [Termo Inspeção]
+      summary: Buscar termo
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Termo encontrado
+    put:
+      tags: [Termo Inspeção]
+      summary: Atualizar termo
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Termo Inspeção]
+      summary: Excluir termo
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+
+  /api/relatorio_mapa:
+    get:
+      tags: [Relatório Mapa]
+      summary: Listar relatórios
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista
+    post:
+      tags: [Relatório Mapa]
+      summary: Criar relatório
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelatorioMapaInput'
+      responses:
+        '201':
+          description: Criado
+  /api/relatorio_mapa/{id}:
+    get:
+      tags: [Relatório Mapa]
+      summary: Buscar relatório
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Relatório
+    put:
+      tags: [Relatório Mapa]
+      summary: Atualizar relatório
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelatorioMapaInput'
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Relatório Mapa]
+      summary: Excluir relatório
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Excluído
+
+  /api/area-inspecionada:
+    get:
+      tags: [Área Inspecionada]
+      summary: Listar áreas
+      responses:
+        '200':
+          description: Lista
+    post:
+      tags: [Área Inspecionada]
+      summary: Criar área
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AreaInspecionadaInput'
+      responses:
+        '201':
+          description: Criado
+  /api/area-inspecionada/{id_ti}:
+    get:
+      tags: [Área Inspecionada]
+      summary: Listar áreas por termo
+      parameters:
+        - $ref: '#/components/parameters/IdTiPath'
+      responses:
+        '200':
+          description: Lista
+  /api/area-inspecionada/{id_ti}/{id}:
+    put:
+      tags: [Área Inspecionada]
+      summary: Atualizar área
+      parameters:
+        - $ref: '#/components/parameters/IdTiPath'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AreaInspecionadaInput'
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Área Inspecionada]
+      summary: Excluir área
+      parameters:
+        - $ref: '#/components/parameters/IdTiPath'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Excluído
+
+  /api/amostra-coletada:
+    get:
+      tags: [Amostra Coletada]
+      summary: Listar amostras
+      responses:
+        '200':
+          description: Lista
+    post:
+      tags: [Amostra Coletada]
+      summary: Criar amostra
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmostraColetadaInput'
+      responses:
+        '201':
+          description: Criado
+  /api/amostra-coletada/{id_ti}:
+    get:
+      tags: [Amostra Coletada]
+      summary: Listar amostras por termo
+      parameters:
+        - $ref: '#/components/parameters/IdTiPath'
+      responses:
+        '200':
+          description: Lista
+  /api/amostra-coletada/{id_ti}/{id}:
+    put:
+      tags: [Amostra Coletada]
+      summary: Atualizar amostra
+      parameters:
+        - $ref: '#/components/parameters/IdTiPath'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmostraColetadaInput'
+      responses:
+        '200':
+          description: Atualizado
+    delete:
+      tags: [Amostra Coletada]
+      summary: Excluir amostra
+      parameters:
+        - $ref: '#/components/parameters/IdTiPath'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Excluído
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  security:
+    - bearerAuth: []
+
+  parameters:
+    IdPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: 100
+    OffsetParam:
+      name: offset
+      in: query
+      schema:
+        type: integer
+        default: 0
+    IdTiPath:
+      name: id_ti
+      in: path
+      required: true
+      schema:
+        type: string
+      description: ID do termo de inspeção
+
+  schemas:
+    ProgramaInput:
+      type: object
+      properties:
+        id:
+          type: string
+        codigo:
+          type: string
+        nome:
+          type: string
+        nomes_comuns:
+          type: string
+        nome_cientifico:
+          type: string
+    RelatorioMapaInput:
+      type: object
+      required: [id_programa, ano, data]
+      properties:
+        id_programa:
+          type: string
+        ano:
+          type: string
+        data:
+          type: string
+        trimestre:
+          type: integer
+        orgao:
+          type: string
+        id_usuario:
+          type: string
+        termo_inspecao:
+          type: integer
+        termo_coleta:
+          type: integer
+        id_propriedade:
+          type: string
+        tipo_imovel:
+          type: string
+        municipio:
+          type: string
+        cultura:
+          type: string
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        status:
+          type: string
+          enum: [NORMAL, SUSPEITA, FOCO]
+    AreaInspecionadaInput:
+      type: object
+      required: [id_termo_inspecao, id_programa, numero_plantas, numero_inspecionadas]
+      properties:
+        id_termo_inspecao:
+          type: string
+        id_programa:
+          type: string
+        tipo_area:
+          type: string
+        nome_local:
+          type: string
+        especie:
+          type: string
+        variedade:
+          type: string
+        numero_plantas:
+          type: integer
+        numero_inspecionadas:
+          type: integer
+        numero_suspeitas:
+          type: integer
+        area_plantada:
+          type: number
+        obs:
+          type: string
+    AmostraColetadaInput:
+      type: object
+      required: [id_termo_inspecao, identificacao_coleta]
+      properties:
+        id_termo_inspecao:
+          type: string
+        identificacao_coleta:
+          type: string
+        id_area_inspecionada:
+          type: integer
+        latitude:
+          type: number
+        longitude:
+          type: number
+    Error:
+      type: object
+      properties:
+        error:
+          type: string

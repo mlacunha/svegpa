@@ -1,0 +1,5 @@
+-- Referência: sec_users.formacao é INT FK para formacao.id
+-- Pule se coluna/tabela já existirem.
+-- CREATE TABLE formacao (id INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(255) NOT NULL);
+-- INSERT INTO formacao (nome) VALUES ('Engenheiro Agrônomo'),('Técnico Agrícola'),('Médico Veterinário');
+-- ALTER TABLE sec_users ADD COLUMN formacao INT DEFAULT NULL AFTER phone;
