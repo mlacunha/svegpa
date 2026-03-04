@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Fundo azul (brand-blue é #2563eb) com bordas arredondadas -->
+  <rect width="512" height="512" rx="128" fill="#2563eb"/>
+  
+  <!-- Ícone de folha (baseado na lucide-react Leaf), redimensionado para preencher mais e ser no centro, cor branca -->
+  <g transform="translate(100, 100) scale(13.0)">
+    <path fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M11 20A7 7 0 0 1 14 6a7 7 0 0 1 7 7c0 4.38-4 8-10 8a7 7 0 0 1-7-7c0-4.38 4-8 10-8Z"/>
+    <path fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M11 20v-5"/>
+    <path fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M11 6a4 4 0 0 1 4 4"/>
+  </g>
+</svg>
